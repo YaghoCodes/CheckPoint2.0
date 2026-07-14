@@ -1,6 +1,6 @@
-drop database checkpoint;
-CREATE DATABASE if not exists checkpoint;
-USE checkpoint;
+drop database if exists checkpoint2;
+CREATE DATABASE if not exists checkpoint2;
+USE checkpoint2;
 
 drop table if exists usuario;
 drop table if exists jogo;
@@ -15,16 +15,17 @@ CREATE TABLE usuario(
 ) AUTO_INCREMENT = 1;
 
 CREATE TABLE jogo(
-  id_jogo INT NOT NULL,
+  id_jogo INT NOT NULL auto_increment,
   nome VARCHAR(100) NOT NULL,
   categoria VARCHAR(20) NOT NULL,
   description TEXT NOT NULL,
   developer VARCHAR(100) NOT NULL,
   imagem VARCHAR(255) null,
   PRIMARY KEY (id_jogo)
-);
+)AUTO_INCREMENT = 10;
 
 CREATE TABLE avaliacao (
+  fk_usuario INT NOT NULL,
   fk_usuario INT NOT NULL,
   fk_jogo INT NOT NULL,
   status TINYINT NOT NULL DEFAULT 0, -- 0 = WishList 1 = Jogando 2 = Concluido 3 = nada --
@@ -35,3 +36,5 @@ CREATE TABLE avaliacao (
   CONSTRAINT fk_Avaliacoes_Jogos FOREIGN KEY (fk_jogo) REFERENCES jogo (id_jogo),
   CONSTRAINT chk_nota CHECK (nota BETWEEN 0 AND 5)
 );
+
+select * from usuario;
