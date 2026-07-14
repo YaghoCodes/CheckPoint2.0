@@ -17,15 +17,12 @@ CREATE TABLE usuario(
 CREATE TABLE jogo(
   id_jogo INT NOT NULL auto_increment,
   nome VARCHAR(100) NOT NULL,
-  categoria VARCHAR(20) NOT NULL,
   description TEXT NOT NULL,
-  developer VARCHAR(100) NOT NULL,
   imagem VARCHAR(255) null,
   PRIMARY KEY (id_jogo)
 )AUTO_INCREMENT = 10;
 
 CREATE TABLE avaliacao (
-  fk_usuario INT NOT NULL,
   fk_usuario INT NOT NULL,
   fk_jogo INT NOT NULL,
   status TINYINT NOT NULL DEFAULT 0, -- 0 = WishList 1 = Jogando 2 = Concluido 3 = nada --
@@ -37,4 +34,8 @@ CREATE TABLE avaliacao (
   CONSTRAINT chk_nota CHECK (nota BETWEEN 0 AND 5)
 );
 
+insert into usuario(id_usuario, username, email, senha) values(1, 'yagho', 'yaghochinaglia@gmail.com', 123);
+
 select * from usuario;
+select * from jogo;
+select * from avaliacao;
