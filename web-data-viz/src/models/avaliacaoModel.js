@@ -37,7 +37,25 @@ async function inserirAvaliacao(usuario, jogo, review, nota, status) {
     return database.executar(instrucaoSql);
 }
 
+async function buscarReviews(id) {
+
+    console.log("Buscando reviews");
+
+    var instrucaoSql = `
+        SELECT a.review, a.nota, u.username as nome_usuario
+        FROM usuario u
+        JOIN avaliacao a ON u.id_usuario = a.fk_usuario
+        WHERE a.fk_jogo = ${id} LIMIT 3;
+    `;
+
+    console.log("Executando a instrução SQL: \n" + instrucaoSql);
+
+    return database.executar(instrucaoSql);
+}
+
+      
 module.exports = {
     buscarAvaliacao,
-    inserirAvaliacao
+    inserirAvaliacao,
+    buscarReviews
 };

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <link rel="shortcut icon" href="../assets/icon/favicon2.ico" type="image/x-icon">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CheckPoint | Dashboards</title>
+
+
+    <link rel="stylesheet" href="./../css/dashboards.css">
+    <link rel="stylesheet" href="./../css/estilo.css" />
+    <script src="../js/sessao.js"></script>
+    <script src="./../js/alerta.js"></script>
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+
+    <!-- scripts do Chart.js - 2022-1 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!--FONT AWESOME-->
+    <script src="https://kit.fontawesome.com/9f7414eb10.js" crossorigin="anonymous"></script>
+</head>
+
+<!-- <body onload=" atualizarFeed()"> -->
+
+<body>
+
+    <div class="janela">
+        <div class="header-left">
+            <h1>CheckPoint</h1>
+
+            <div class="hello">
+                <h3>Olá, <span id="b_usuario">usuário</span>!</h3>
+            </div>
+
+            <div class="btn-nav-white">
+                <a href="./dashboard.html">
+                    <h3>Gráficos</h3>
+                </a>
+            </div>
+
+            <div class="btn-nav">
+
+                <h3>Catalogo</h3>
+
+            </div>
+
+            <div class="btn-nav-white">
+                <a href="./mural.html">
+                    <h3>Adicionar Jogo</h3>
+                </a>
+            </div>
+
+            <div class="btn-logout" onclick="limparSessao()">
+                <h3>Sair</h3>
+            </div>
+
+        </div>
+
+        <div class="catalogo">
+            <div class="catalogo-titulo">Catalogo</div>
+            <div class="catalogo-subtitulo">Lista de jogos disponíveis, clique para ver detalhes e reviews</div>
+
+            <div class="catalogo-container">
+                <div class="catalogo-card">
+                    <img src="https://picsum.photos/seed/zelda/300/300" alt="The Legend of Zelda">
+                    <h3>The Legend of Zelda</h3>
+                </div>
+
+                <div class="catalogo-card">
+                    <img src="https://picsum.photos/seed/gow/300/300" alt="God of War">
+                    <h3>God of War</h3>
+                </div>
+
+                <div class="catalogo-card">
+                    <img src="https://picsum.photos/seed/eldenring/300/300" alt="Elden Ring">
+                    <h3>Elden Ring</h3>
+                </div>
+
+                <div class="catalogo-card">
+                    <img src="https://picsum.photos/seed/minecraft/300/300" alt="Minecraft">
+                    <h3>Minecraft</h3>
+                </div>
+
+
+
+            </div>
+        </div>
+    </div>
+
+
+</body>
+
+</html>
+
+<script>
+    b_usuario.innerHTML = sessionStorage.NOME_USUARIO;
+
+    async function plotarJogos() {
+        const resposta = await fetch(`/jogo/catalogo`);
+        if (resposta.ok) {
+            const jogos = await resposta.json();
+            const catalogoContainer = document.querySelector('.catalogo-container');
+            catalogoContainer.innerHTML = '';
+            console.log(jogos)
+            catalogoContainer.innerHTML = jogos.map(jogo => `
+                <a href="jogo.html?id=${jogo.id_jogo}" class="catalogo-card">
+                    <img src="${jogo.imagem}" alt="${jogo.nome}">
+                    <h3>${jogo.nome}</h3>
+                </a>`
+            ).join('');
+        } else {
+            console.error('Erro ao buscar jogos do catálogo:', resposta.statusText);
+        }
+    }
+    plotarJogos();
+</script>

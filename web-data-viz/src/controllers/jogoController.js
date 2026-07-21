@@ -79,6 +79,59 @@ async function adicionarJogo(req, res) {
 
 }
 
+async function listarJogos(req, res) {
+    try {
+
+        const jogos = await jogoModel.listarJogos();
+
+        res.status(200).json(jogos);
+
+    } catch (erro) {
+        console.error("Erro no controller:", erro);
+        res.status(500).json({
+            mensagem: "Erro ao listar jogos.",
+            erro: erro.message
+        });
+    }
+}
+
+async function buscarId(req, res) {
+    try {
+        const termo = req.params.id;
+        console.log("entrei no Controller");
+        const jogoBD = await jogoModel.buscarPorId(termo);
+        if (jogoBD.length > 0) {
+
+            console.log("Achei o jogo no banco");
+
+            const jogo = jogoBD[0];
+            return res.json(jogo);
+        } 
+    }
+    catch (erro) {
+        console.log("ERRO COMPLETO:", erro);
+        res.status(500).json({
+            erro: "Erro ao buscar Jogo"
+        });
+    }
+}
+
+async function buscarReviews(req, res) {
+    try {
+        const id = req.params.id;
+        const reviewsBD = await avaliacaoModel.buscarReviews(id);
+        return res.json(reviewsBD);
+    } catch (erro) {
+        console.log("ERRO COMPLETO:", erro);
+        res.status(500).json({
+            erro: "Erro ao buscar reviews"
+        });
+    }
+}
+
 module.exports = {
-    adicionarJogo
+    adicionarJogo,
+    listarJogos,
+    buscarId,
+    buscarReviews
 }

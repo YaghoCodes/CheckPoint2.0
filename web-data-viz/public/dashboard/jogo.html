@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <link rel="shortcut icon" href="../assets/icon/favicon2.ico" type="image/x-icon">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CheckPoint | Dashboards</title>
+
+
+    <link rel="stylesheet" href="./../css/dashboards.css">
+    <link rel="stylesheet" href="./../css/estilo.css" />
+    <script src="../js/sessao.js"></script>
+    <script src="./../js/alerta.js"></script>
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<!-- <body onload=" atualizarFeed()"> -->
+
+<body>
+
+    <div class="janela">
+        <div class="header-left">
+            <h1>CheckPoint</h1>
+
+            <div class="hello">
+                <h3>Olá, <span id="b_usuario">usuário</span>!</h3>
+            </div>
+
+            <div class="btn-nav-white">
+                <a href="./dashboard.html">
+                    <h3>Gráficos</h3>
+                </a>
+            </div>
+
+            <div class="btn-nav-white">
+                <a href="./catalogo.html">
+                    <h3>Catalogo</h3>
+                </a>
+            </div>
+
+            <div class="btn-nav-white">
+                <a href="./mural.html">
+                    <h3>Adicionar Jogo</h3>
+                </a>
+            </div>
+
+            <div class="btn-logout" onclick="limparSessao()">
+                <h3>Sair</h3>
+            </div>
+
+        </div>
+
+        <div class="jogo">
+
+            <div class="jogo-topo">
+                <div class="jogo-imagem" id="jogo_imagem">
+                    <img src="" alt="The Witcher 3: Wild Hunt">
+                </div>
+
+                <div class="jogo-info">
+                    <h2 class="jogo-titulo" id="jogo_titulo">The Witcher 3: Wild Hunt</h2>
+                    <div class="jogo-nota" id="jogo_nota">Nota 4.8</div>
+                    <p class="jogo-descricao" id="jogo_descricao">
+                        O terceiro jogo da série não poupa o jogador. Aventuras em mundo aberto do renomado
+                        caçador de monstros Geralt de Rívia, agora em uma escala ainda maior. Seguindo o material
+                        de origem mais fielmente, dessa vez Geralt está tentando encontrar a criança da profecia,
+                        Ciri, enquanto ganha uma grana extra com contratos pelo caminho.
+                    </p>
+                </div>
+            </div>
+
+            <div class="jogo-reviews" id="jogo_reviews">
+                <div class="jogo-reviews-titulo">Últimas reviews</div>
+
+                <div class="review-card">
+                    <div class="review-topo">
+                        <span class="review-usuario">joaosilva</span>
+                        <span class="review-nota">★ 5.0</span>
+                    </div>
+                    <p class="review-texto">Melhor jogo que já joguei, história incrível e mundo aberto perfeito.</p>
+                </div>
+
+                <div class="review-card">
+                    <div class="review-topo">
+                        <span class="review-usuario">mariaoliveira</span>
+                        <span class="review-nota">★ 4.5</span>
+                    </div>
+                    <p class="review-texto">Combate um pouco difícil no começo, mas depois vicia demais.</p>
+                </div>
+
+                <div class="review-card">
+                    <div class="review-topo">
+                        <span class="review-usuario">pedrosantos</span>
+                        <span class="review-nota">★ 5.0</span>
+                    </div>
+                    <p class="review-texto">As DLCs são incríveis, quase um jogo à parte de tão boas.</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+</body>
+
+</html>
+
+<script>
+    b_usuario.innerHTML = sessionStorage.NOME_USUARIO;
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("id");
+
+
+    async function buscarInfos() {
+        const resposta = await fetch(`/jogo/buscarID/${id}`);
+        jogoUnico = await resposta.json();
+        console.log(jogoUnico)
+        plotarDados(jogoUnico);
+    }
+
+    function plotarDados(jogo) {
+        jogo_descricao.innerHTML = jogo.description;
+        jogo_titulo.innerHTML = jogo.nome;
+        jogo_nota.innerHTML = `Nota ${jogo.media}`;
+        jogo_imagem.innerHTML = `<img src="${jogo.imagem}" alt="${jogo.nome}">`;
+    }
+
+     async function buscarReviews() {
+        const resposta = await fetch(`/jogo/reviews/${id}`);
+        const reviews = await resposta.json();
+        console.log(reviews)
+        jogo_reviews.innerHTML = reviews.map(review => `
+            <div class="review-card">
+                <div class="review-topo">
+                    <span class="review-usuario">${review.nome_usuario}</span>
+                    <span class="review-nota">★ ${review.nota}</span>
+                </div>
+                <p class="review-texto">${review.review}</p>
+            </div>`
+        ).join('');
+     }
+    buscarInfos();
+    buscarReviews();
+</script>
