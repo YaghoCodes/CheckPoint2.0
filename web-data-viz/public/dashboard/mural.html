@@ -118,7 +118,7 @@
                                 </label>
                             </div>
 
-                            <button type="submit" onclick="publicar()">Adicionar</button>
+                            <button onclick="publicar()">Adicionar</button>
                         </form>
                     </div>
                 </div>
@@ -138,7 +138,7 @@
     b_usuario.innerHTML = sessionStorage.NOME_USUARIO;
 
 
-    function publicar() {
+    async function publicar() {
         var idUsuario = sessionStorage.ID_USUARIO;
 
         var corpo = {
@@ -151,19 +151,18 @@
             status: statusSelect.value
         }
 
-        fetch(`/jogo/publicar`, {
+        const resposta = await fetch(`/jogo/publicar`, {
             method: "post",
             headers: {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify(corpo)
-        }).then(function (resposta) {
+        })
 
             console.log("resposta: ", resposta);
 
             if (resposta.ok) {
                 window.alert("Jogo adicionado com sucesso pelo usuario de ID: " + idUsuario + "!");
-                window.location = "/dashboard/mural.html";
             } else if (resposta.status == 404) {
                 window.alert("Deu 404!");
             } else if (resposta.status == 409) {
@@ -171,14 +170,11 @@
             } else {
                 throw ("Houve um erro ao tentar realizar a postagem! Código da resposta: " + resposta.status);
             }
-        }).catch(function (resposta) {
-            console.log(`#ERRO: ${resposta}`);
-            finalizarAguardar();
-        });
+        
 
         return false;
 
-    }
+    };
 
 
 </script>
